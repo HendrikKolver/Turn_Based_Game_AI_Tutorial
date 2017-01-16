@@ -2,6 +2,7 @@ package game;
 
 import player.PlayerInterface;
 import player.PlayerMove;
+import player.RandomMovePlayer;
 
 //Noughts & Crosses
 public class GameEngine {
@@ -13,6 +14,12 @@ public class GameEngine {
         boardState = new BoardState();
         this.playerNaughts = playerNaughts;
         this.playerCrosses = playerCrosses;
+    }
+
+    public GameEngine(BoardState boardState){
+        this.boardState = boardState;
+        playerNaughts = new RandomMovePlayer();
+        playerCrosses = new RandomMovePlayer();
     }
 
     public void playGame(){
@@ -111,4 +118,16 @@ public class GameEngine {
     }
 
 
+    public GameStateValue getWinningState() {
+        PlayerInterface winningPlayer = getWinner();
+        if(winningPlayer == playerNaughts){
+            return GameStateValue.NAUGHT;
+        }else if(winningPlayer == playerCrosses){
+            return GameStateValue.CROSS;
+        }
+
+        return GameStateValue.EMPTY;
+
+
+    }
 }

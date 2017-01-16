@@ -11,19 +11,34 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class GameTreeNode {
     private GameStateValue stateValue;
+    private GameStateValue maxState;
     private double evalScore;
     private List<GameTreeNode> children;
     private BoardState nodeBoardState;
     private PlayerMove move;
 
-    public GameTreeNode(GameStateValue stateValue, BoardState boardState){
+    public GameTreeNode(GameStateValue stateValue, GameStateValue maxState, BoardState boardState){
         this.stateValue = stateValue;
         this.nodeBoardState = boardState;
         this.children = new ArrayList<>();
+        this.maxState = maxState;
     }
 
     public void evalBoardState(){
-        evalScore = ThreadLocalRandom.current().nextInt(0, 20);
+        GameEngine engine = new GameEngine(nodeBoardState);
+        GameStateValue winningState = engine.getWinningState();
+        if(winningState == GameStateValue.EMPTY){
+            evalScore = 0;
+            return;
+        }
+
+        if(engine.getWinningState() == maxState){
+            evalScore = 10;
+            return;
+        }
+
+        evalScore = -10;
+
     }
 
     public void generateChildren() {
@@ -33,7 +48,7 @@ public class GameTreeNode {
                 BoardState newState = nodeBoardState.clone();
                 boolean isValidMove = newState.makeMove(childValue, row, col);
                 if (isValidMove) {
-                    GameTreeNode newNode = new GameTreeNode(childValue, newState);
+                    GameTreeNode newNode = new GameTreeNode(childValue, maxState, newState);
                     newNode.setMove(new PlayerMove(row, col));
                     children.add(newNode);
                 }

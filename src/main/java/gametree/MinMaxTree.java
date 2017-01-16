@@ -11,7 +11,7 @@ public class MinMaxTree {
     private final BoardState boardState;
     private final GameStateValue playerState;
     private final GameStateValue opponentState;
-    private final int MAX_PLY_DEPTH = 2;
+    private final int MAX_PLY_DEPTH = 50;
 
     public MinMaxTree(GameStateValue player, GameStateValue opponent, BoardState boardState){
         this.boardState = boardState;
@@ -19,9 +19,8 @@ public class MinMaxTree {
         this.opponentState = opponent;
     }
 
-    //the goal is to evaluate all possible options and return the best possible move
     public PlayerMove getOptimalMove(){
-        GameTreeNode rootNode = new GameTreeNode(opponentState, boardState);
+        GameTreeNode rootNode = new GameTreeNode(opponentState, playerState, boardState);
         buildTreeMax(rootNode, 0);
         List<GameTreeNode> children = rootNode.getChildren();
 
