@@ -1,7 +1,6 @@
 package game;
 
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 import player.PlayerInterface;
 import player.PlayerMove;
@@ -116,7 +115,7 @@ public class GameEngineTest {
         private int col = 0;
 
         @Override
-        public PlayerMove getMove(BoardState boardState) {
+        public PlayerMove getMove(BoardState boardState, GameStateValue playerStateValue, GameStateValue opponentStateValue) {
             PlayerMove move = new PlayerMove(row, col);
 
             col++;
@@ -134,7 +133,7 @@ public class GameEngineTest {
         private int col = 0;
 
         @Override
-        public PlayerMove getMove(BoardState boardState) {
+        public PlayerMove getMove(BoardState boardState, GameStateValue playerStateValue, GameStateValue opponentStateValue) {
             PlayerMove move = new PlayerMove(row, col);
 
             col++;
@@ -148,7 +147,7 @@ public class GameEngineTest {
         private int col = 0;
 
         @Override
-        public PlayerMove getMove(BoardState boardState) {
+        public PlayerMove getMove(BoardState boardState, GameStateValue playerStateValue, GameStateValue opponentStateValue) {
             PlayerMove move = new PlayerMove(row, col);
 
             col++;
@@ -162,7 +161,7 @@ public class GameEngineTest {
         private int col = 0;
 
         @Override
-        public PlayerMove getMove(BoardState boardState) {
+        public PlayerMove getMove(BoardState boardState, GameStateValue playerStateValue, GameStateValue opponentStateValue) {
             PlayerMove move = new PlayerMove(row, col);
 
             col++;
@@ -176,7 +175,7 @@ public class GameEngineTest {
         private int col = 0;
 
         @Override
-        public PlayerMove getMove(BoardState boardState) {
+        public PlayerMove getMove(BoardState boardState, GameStateValue playerStateValue, GameStateValue opponentStateValue) {
             PlayerMove move = new PlayerMove(row, col);
 
             row++;
@@ -190,7 +189,7 @@ public class GameEngineTest {
         private int col = 1;
 
         @Override
-        public PlayerMove getMove(BoardState boardState) {
+        public PlayerMove getMove(BoardState boardState, GameStateValue playerStateValue, GameStateValue opponentStateValue) {
             PlayerMove move = new PlayerMove(row, col);
 
             row++;
@@ -204,7 +203,7 @@ public class GameEngineTest {
         private int col = 2;
 
         @Override
-        public PlayerMove getMove(BoardState boardState) {
+        public PlayerMove getMove(BoardState boardState, GameStateValue playerStateValue, GameStateValue opponentStateValue) {
             PlayerMove move = new PlayerMove(row, col);
 
             row++;
@@ -218,7 +217,7 @@ public class GameEngineTest {
         private int col = 0;
 
         @Override
-        public PlayerMove getMove(BoardState boardState) {
+        public PlayerMove getMove(BoardState boardState, GameStateValue playerStateValue, GameStateValue opponentStateValue) {
             PlayerMove move = new PlayerMove(row, col);
             row++;
             col++;
@@ -231,7 +230,7 @@ public class GameEngineTest {
         private int state = 0;
 
         @Override
-        public PlayerMove getMove(BoardState boardState) {
+        public PlayerMove getMove(BoardState boardState, GameStateValue playerStateValue, GameStateValue opponentStateValue) {
             if(state == 0){
                 state++;
                 return new PlayerMove(0, 2);
@@ -250,7 +249,7 @@ public class GameEngineTest {
         private int state = 0;
 
         @Override
-        public PlayerMove getMove(BoardState boardState) {
+        public PlayerMove getMove(BoardState boardState, GameStateValue playerStateValue, GameStateValue opponentStateValue) {
             if(state == 0){
                 state++;
                 return new PlayerMove(0, 0);
@@ -277,7 +276,7 @@ public class GameEngineTest {
         private int state = 0;
 
         @Override
-        public PlayerMove getMove(BoardState boardState) {
+        public PlayerMove getMove(BoardState boardState, GameStateValue playerStateValue, GameStateValue opponentStateValue) {
             if(state == 0){
                 state++;
                 return new PlayerMove(0, 1);

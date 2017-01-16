@@ -19,13 +19,13 @@ public class GameEngine {
         while(!isGameFinished()){
             boolean wasMoveValid = false;
             while(!isGameFinished() && !wasMoveValid){
-                PlayerMove move = playerNaughts.getMove(boardState);
+                PlayerMove move = playerNaughts.getMove(boardState, GameStateValue.NAUGHT, GameStateValue.CROSS);
                 wasMoveValid = boardState.makeMove(GameStateValue.NAUGHT, move.row, move.col);
             }
 
             wasMoveValid = false;
             while(!isGameFinished() && !wasMoveValid){
-                PlayerMove move = playerCrosses.getMove(boardState);
+                PlayerMove move = playerCrosses.getMove(boardState, GameStateValue.CROSS, GameStateValue.NAUGHT);
                 wasMoveValid = boardState.makeMove(GameStateValue.CROSS, move.row, move.col);
             }
         }
@@ -91,13 +91,17 @@ public class GameEngine {
     }
 
     public boolean isGameFinished(){
+        return isGameFinished(boardState);
+    }
+
+    public boolean isGameFinished(BoardState state){
         if(getWinner() != null){
             return true;
         }
 
         for (int row = 0; row < 3; row++) {
             for (int col = 0; col < 3; col++) {
-                if(boardState.getValue(row, col) == GameStateValue.EMPTY){
+                if(state.getValue(row, col) == GameStateValue.EMPTY){
                     return false;
                 }
             }

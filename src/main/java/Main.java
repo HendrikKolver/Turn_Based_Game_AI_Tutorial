@@ -5,7 +5,7 @@ import player.RandomMovePlayer;
 
 public class Main {
     public static void main(String[] args) {
-        PlayerInterface player1 = new HumanPlayer();
+        PlayerInterface player1 = new RandomMovePlayer();
         PlayerInterface player2 = new RandomMovePlayer();
         GameEngine gameEngine = new GameEngine(player1, player2);
         gameEngine.playGame();

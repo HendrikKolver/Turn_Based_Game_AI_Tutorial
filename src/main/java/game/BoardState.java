@@ -8,6 +8,11 @@ public class BoardState {
         initGameBoard();
     }
 
+    public BoardState(GameStateValue[][] gameBoard){
+        this.gameBoard = gameBoard;
+
+    }
+
     private void initGameBoard() {
         for (int row = 0; row < 3; row++) {
             for (int col = 0; col < 3; col++) {
@@ -15,6 +20,8 @@ public class BoardState {
             }
         }
     }
+
+
 
     //returns true if move is valid
     public boolean makeMove(GameStateValue move, int positionRow, int positionCol){
@@ -31,6 +38,19 @@ public class BoardState {
 
     public GameStateValue getValue(int row, int col) {
         return gameBoard[row][col];
+    }
+
+    @Override
+    public BoardState clone(){
+        GameStateValue[][] clonedGameBoard = new GameStateValue[3][3];
+        for (int row = 0; row < 3; row++) {
+            for (int col = 0; col < 3; col++) {
+                clonedGameBoard[row][col]= gameBoard[row][col];
+            }
+        }
+        BoardState clonedState = new BoardState(clonedGameBoard);
+
+        return  clonedState;
     }
 
     public void printBoardState() {

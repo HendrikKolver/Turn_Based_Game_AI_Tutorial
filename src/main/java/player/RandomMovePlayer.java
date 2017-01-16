@@ -2,13 +2,15 @@ package player;
 
 
 import game.BoardState;
-
-import java.util.concurrent.ThreadLocalRandom;
+import game.GameStateValue;
+import gametree.MinMaxTree;
 
 public class RandomMovePlayer implements PlayerInterface {
 
+
     @Override
-    public PlayerMove getMove(BoardState boardState) {
-        return new PlayerMove(ThreadLocalRandom.current().nextInt(0, 3), ThreadLocalRandom.current().nextInt(0, 3));
+    public PlayerMove getMove(BoardState boardState, GameStateValue playerStateValue, GameStateValue opponentStateValue) {
+        MinMaxTree minMaxTree = new MinMaxTree(playerStateValue, playerStateValue, boardState);
+        return minMaxTree.getOptimalMove();
     }
 }
