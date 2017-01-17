@@ -12,6 +12,8 @@ public class MinMaxTree {
     private final GameStateValue playerState;
     private final GameStateValue opponentState;
     private final int MAX_PLY_DEPTH = 50;
+    private final int MIN_CAP = -100;
+    private final int MAX_CAP = 100;
 
     public MinMaxTree(GameStateValue player, GameStateValue opponent, BoardState boardState){
         this.boardState = boardState;
@@ -26,7 +28,7 @@ public class MinMaxTree {
 
 
         GameTreeNode winningChild = null;
-        double evalScoreMax = -100;
+        double evalScoreMax = MIN_CAP;
         for (GameTreeNode child: children) {
             if(child.getEvalScore() > evalScoreMax){
                 winningChild = child;
@@ -46,7 +48,7 @@ public class MinMaxTree {
         rootNode.generateChildren();
         List<GameTreeNode> nodes = rootNode.getChildren();
 
-        double evalScore = -100;
+        double evalScore = MIN_CAP;
         for (GameTreeNode node: nodes) {
             double nodeScore = buildTreeMin(node, plyDepth+1);
             node.setEvalScore(nodeScore);
@@ -67,7 +69,7 @@ public class MinMaxTree {
         rootNode.generateChildren();
         List<GameTreeNode> nodes = rootNode.getChildren();
 
-        double evalScore = 100;
+        double evalScore = MAX_CAP;
         for (GameTreeNode node: nodes) {
             double nodeScore = buildTreeMax(node, plyDepth+1);
             node.setEvalScore(nodeScore);
