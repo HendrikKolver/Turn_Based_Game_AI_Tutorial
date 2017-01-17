@@ -25,8 +25,8 @@ public class MinMaxTree {
         List<GameTreeNode> children = rootNode.getChildren();
 
 
-        GameTreeNode winningChild = children.get(0);
-        double evalScoreMax = winningChild.getEvalScore();
+        GameTreeNode winningChild = null;
+        double evalScoreMax = -100;
         for (GameTreeNode child: children) {
             if(child.getEvalScore() > evalScoreMax){
                 winningChild = child;
@@ -46,7 +46,7 @@ public class MinMaxTree {
         rootNode.generateChildren();
         List<GameTreeNode> nodes = rootNode.getChildren();
 
-        double evalScore = -1;
+        double evalScore = -100;
         for (GameTreeNode node: nodes) {
             double nodeScore = buildTreeMin(node, plyDepth+1);
             node.setEvalScore(nodeScore);
@@ -67,7 +67,7 @@ public class MinMaxTree {
         rootNode.generateChildren();
         List<GameTreeNode> nodes = rootNode.getChildren();
 
-        double evalScore = 1000;
+        double evalScore = 100;
         for (GameTreeNode node: nodes) {
             double nodeScore = buildTreeMax(node, plyDepth+1);
             node.setEvalScore(nodeScore);

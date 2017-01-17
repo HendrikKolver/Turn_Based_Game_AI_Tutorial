@@ -2,6 +2,7 @@ package gametree;
 
 import game.BoardState;
 import game.GameEngine;
+import game.GameEngineHelper;
 import game.GameStateValue;
 import player.PlayerMove;
 
@@ -24,21 +25,23 @@ public class GameTreeNode {
         this.maxState = maxState;
     }
 
+    //Always evaluate from the max perspective
     public void evalBoardState(){
-        GameEngine engine = new GameEngine(nodeBoardState);
-        GameStateValue winningState = engine.getWinningState();
-        if(winningState == GameStateValue.EMPTY){
+        GameStateValue winningState = GameEngineHelper.getWinner(nodeBoardState);
+        //draw state
+        if(winningState == null){
             evalScore = 0;
             return;
         }
 
-        if(engine.getWinningState() == maxState){
+        //winning state
+        if(winningState == maxState){
             evalScore = 10;
             return;
         }
 
+        //losing state
         evalScore = -10;
-
     }
 
     public void generateChildren() {
@@ -69,8 +72,7 @@ public class GameTreeNode {
     }
 
     public boolean isEndState() {
-        GameEngine engine = new GameEngine(null, null);
-        return engine.isGameFinished(nodeBoardState);
+        return GameEngineHelper.isGameFinished(nodeBoardState);
     }
 
     public double getEvalScore() {

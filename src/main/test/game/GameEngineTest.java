@@ -17,8 +17,7 @@ public class GameEngineTest {
         player2 = new secondRowPlayer();
         gameEngine = new GameEngine(player1, player2);
         gameEngine.playGame();
-        PlayerInterface winningPlayer = gameEngine.getWinner();
-        Assert.assertTrue(gameEngine.isGameFinished());
+        PlayerInterface winningPlayer = gameEngine.getWinningPlayer();
         Assert.assertEquals(winningPlayer, player1);
     }
 
@@ -28,8 +27,7 @@ public class GameEngineTest {
         player2 = new topRowPlayer();
         gameEngine = new GameEngine(player1, player2);
         gameEngine.playGame();
-        PlayerInterface winningPlayer = gameEngine.getWinner();
-        Assert.assertTrue(gameEngine.isGameFinished());
+        PlayerInterface winningPlayer = gameEngine.getWinningPlayer();
         Assert.assertEquals(winningPlayer, player1);
     }
 
@@ -39,8 +37,7 @@ public class GameEngineTest {
         player2 = new topRowPlayer();
         gameEngine = new GameEngine(player1, player2);
         gameEngine.playGame();
-        PlayerInterface winningPlayer = gameEngine.getWinner();
-        Assert.assertTrue(gameEngine.isGameFinished());
+        PlayerInterface winningPlayer = gameEngine.getWinningPlayer();
         Assert.assertEquals(winningPlayer, player1);
     }
 
@@ -50,8 +47,7 @@ public class GameEngineTest {
         player2 = new secondColPlayer();
         gameEngine = new GameEngine(player1, player2);
         gameEngine.playGame();
-        PlayerInterface winningPlayer = gameEngine.getWinner();
-        Assert.assertTrue(gameEngine.isGameFinished());
+        PlayerInterface winningPlayer = gameEngine.getWinningPlayer();
         Assert.assertEquals(winningPlayer, player1);
     }
 
@@ -61,8 +57,7 @@ public class GameEngineTest {
         player2 = new firstColPlayer();
         gameEngine = new GameEngine(player1, player2);
         gameEngine.playGame();
-        PlayerInterface winningPlayer = gameEngine.getWinner();
-        Assert.assertTrue(gameEngine.isGameFinished());
+        PlayerInterface winningPlayer = gameEngine.getWinningPlayer();
         Assert.assertEquals(winningPlayer, player1);
     }
 
@@ -72,8 +67,7 @@ public class GameEngineTest {
         player2 = new firstColPlayer();
         gameEngine = new GameEngine(player1, player2);
         gameEngine.playGame();
-        PlayerInterface winningPlayer = gameEngine.getWinner();
-        Assert.assertTrue(gameEngine.isGameFinished());
+        PlayerInterface winningPlayer = gameEngine.getWinningPlayer();
         Assert.assertEquals(winningPlayer, player1);
     }
 
@@ -83,8 +77,7 @@ public class GameEngineTest {
         player2 = new increasingCountPlayer();
         gameEngine = new GameEngine(player1, player2);
         gameEngine.playGame();
-        PlayerInterface winningPlayer = gameEngine.getWinner();
-        Assert.assertTrue(gameEngine.isGameFinished());
+        PlayerInterface winningPlayer = gameEngine.getWinningPlayer();
         Assert.assertEquals(winningPlayer, player1);
     }
 
@@ -94,8 +87,7 @@ public class GameEngineTest {
         player2 = new diagonalPlayer();
         gameEngine = new GameEngine(player1, player2);
         gameEngine.playGame();
-        PlayerInterface winningPlayer = gameEngine.getWinner();
-        Assert.assertTrue(gameEngine.isGameFinished());
+        PlayerInterface winningPlayer = gameEngine.getWinningPlayer();
         Assert.assertEquals(winningPlayer, player2);
     }
 
@@ -105,8 +97,7 @@ public class GameEngineTest {
         player2 = new drawPlayer2();
         gameEngine = new GameEngine(player1, player2);
         gameEngine.playGame();
-        PlayerInterface winningPlayer = gameEngine.getWinner();
-        Assert.assertTrue(gameEngine.isGameFinished());
+        PlayerInterface winningPlayer = gameEngine.getWinningPlayer();
         Assert.assertEquals(winningPlayer, null);
     }
 

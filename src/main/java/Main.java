@@ -10,9 +10,9 @@ public class Main {
         GameEngine gameEngine = new GameEngine(player1, player2);
         gameEngine.playGame();
 
-        if(gameEngine.getWinner() == player1){
+        if(gameEngine.getWinningPlayer() == player1){
             System.out.println("Player1 wins");
-        }else if(gameEngine.getWinner() == player2){
+        }else if(gameEngine.getWinningPlayer() == player2){
             System.out.println("Player2 wins");
         }else{
             System.out.println("Draw");

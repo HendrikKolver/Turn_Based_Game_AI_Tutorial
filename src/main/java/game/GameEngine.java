@@ -38,96 +38,21 @@ public class GameEngine {
         }
     }
 
-    //Returns winning main.java.player or null for a draw
-    public PlayerInterface getWinner(){
-        GameStateValue value = getResultForRow(0,0, 0,1, 0,2);
-        if(value == GameStateValue.NAUGHT || value == GameStateValue.CROSS){
-            return getPlayer(value);
-        }
-
-        value = getResultForRow(1,0, 1,1, 1,2);
-        if(value == GameStateValue.NAUGHT || value == GameStateValue.CROSS){
-            return getPlayer(value);
-        }
-
-         value = getResultForRow(2,0, 2,1, 2,2);
-        if(value == GameStateValue.NAUGHT || value == GameStateValue.CROSS){
-            return getPlayer(value);
-        }
-
-         value = getResultForRow(0,0, 1,0, 2,0);
-        if(value == GameStateValue.NAUGHT || value == GameStateValue.CROSS){
-            return getPlayer(value);
-        }
-
-         value = getResultForRow(0,1, 1,1, 2,1);
-        if(value == GameStateValue.NAUGHT || value == GameStateValue.CROSS){
-            return getPlayer(value);
-        }
-
-         value = getResultForRow(0,2, 1,2, 2,2);
-        if(value == GameStateValue.NAUGHT || value == GameStateValue.CROSS){
-            return getPlayer(value);
-        }
-
-         value = getResultForRow(0,0, 1,1, 2,2);
-        if(value == GameStateValue.NAUGHT || value == GameStateValue.CROSS){
-            return getPlayer(value);
-        }
-
-         value = getResultForRow(2,0, 1,1, 0,2);
-        if(value == GameStateValue.NAUGHT || value == GameStateValue.CROSS){
-            return getPlayer(value);
-        }
-
-        return null;
-    }
-
-    private PlayerInterface getPlayer(GameStateValue resultForRow) {
-        if(resultForRow == GameStateValue.NAUGHT){
+    public PlayerInterface getWinningPlayer() {
+        GameStateValue result = GameEngineHelper.getWinner(boardState);
+        if(result == GameStateValue.NAUGHT){
             return playerNaughts;
+        }else if(result == GameStateValue.CROSS){
+            return  playerCrosses;
         }
-        return  playerCrosses;
-    }
 
-    private GameStateValue getResultForRow(int row1, int col1, int row2, int col2, int row3, int col3) {
-        if(boardState.getValue(row1,col1).equals(boardState.getValue(row2,col2)) && boardState.getValue(row1,col1).equals(boardState.getValue(row3,col3))){
-           return boardState.getValue(row1,col1);
-        }
         return null;
     }
 
-    public boolean isGameFinished(){
-        return isGameFinished(boardState);
+
+
+    private boolean isGameFinished(){
+        return GameEngineHelper.isGameFinished(boardState);
     }
 
-    public boolean isGameFinished(BoardState state){
-        if(getWinner() != null){
-            return true;
-        }
-
-        for (int row = 0; row < 3; row++) {
-            for (int col = 0; col < 3; col++) {
-                if(state.getValue(row, col) == GameStateValue.EMPTY){
-                    return false;
-                }
-            }
-        }
-
-        return true;
-    }
-
-
-    public GameStateValue getWinningState() {
-        PlayerInterface winningPlayer = getWinner();
-        if(winningPlayer == playerNaughts){
-            return GameStateValue.NAUGHT;
-        }else if(winningPlayer == playerCrosses){
-            return GameStateValue.CROSS;
-        }
-
-        return GameStateValue.EMPTY;
-
-
-    }
 }
