@@ -23,6 +23,7 @@ public class ABPruningTree {
 
     public PlayerMove getOptimalMove(){
         GameTreeNode rootNode = new GameTreeNode(opponentState, playerState, boardState);
+        //We now pass initial values to the build tree function which represent the initial values of alpha and beta
         buildTreeMax(rootNode, 0, MIN_CAP, MAX_CAP);
         List<GameTreeNode> children = rootNode.getChildren();
 
@@ -36,7 +37,6 @@ public class ABPruningTree {
             }
         }
 
-        System.out.println(GlobalCounter.getCounter());
         return winningChild.getMove();
     }
 
@@ -50,13 +50,16 @@ public class ABPruningTree {
         List<GameTreeNode> nodes = rootNode.getChildren();
 
         for (GameTreeNode node: nodes) {
-            GlobalCounter.increaseCounter();
+            //Pass the current values of alpha and beta to the next level of the tree
             double nodeScore = buildTreeMin(node, plyDepth+1, alpha, beta);
             node.setEvalScore(nodeScore);
+            //alpha represents the max so if the current node's score is larger then update alpha
             if(nodeScore > alpha){
                 alpha = nodeScore;
             }
 
+            //if beta is less or equal to alpha then that means that in the best case scenario a child node with a score larger than or equal one already available will be chosen so no other children are calculated
+            //this is because this levels parent node is on a min level so it will choose its child with the smallest score
             if(beta <= alpha){
                 break;
             }
@@ -75,13 +78,16 @@ public class ABPruningTree {
         List<GameTreeNode> nodes = rootNode.getChildren();
 
         for (GameTreeNode node: nodes) {
-            GlobalCounter.increaseCounter();
+            //Pass the current values of alpha and beta to the next level of the tree
             double nodeScore = buildTreeMax(node, plyDepth+1, alpha, beta);
             node.setEvalScore(nodeScore);
+            //beta represents the min so if the nodeScore is less update beta
             if(nodeScore < beta){
                 beta = nodeScore;
             }
 
+            //if beta is less or equal to alpha then that means that in the best case scenario a child node with a score less than or equal one already available will be chosen so no other children are calculated
+            //this is because this levels parent node is on a max level so it will choose its child with the largest score
             if(beta <= alpha){
                 break;
             }
