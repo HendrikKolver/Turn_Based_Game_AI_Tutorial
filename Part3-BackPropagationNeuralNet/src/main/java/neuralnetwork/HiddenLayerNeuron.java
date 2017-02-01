@@ -1,14 +1,9 @@
 package neuralnetwork;
 
-public class HiddenLayerNeuron {
-    private double value = 0;
-
-    public void addValue(double value){
-        this.value += value;
-    }
-
+public class HiddenLayerNeuron extends Neuron {
     public double fire(){
-        //todo sigmoid activation function here
-        return value;
+        double returnValue = calculateSigmoid();
+        value = 0;
+        return returnValue;
     }
 }

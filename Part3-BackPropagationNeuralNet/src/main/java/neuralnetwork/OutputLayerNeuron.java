@@ -1,15 +1,10 @@
 package neuralnetwork;
 
 
-public class OutputLayerNeuron {
-    private double value = 0;
-
-    public void addValue(double value){
-        this.value += value;
-    }
-
+public class OutputLayerNeuron extends Neuron  {
     public double fire(){
-        //todo sigmoid activation function here
-        return value;
+        double returnValue = value;
+        value = 0;
+        return returnValue;
     }
 }

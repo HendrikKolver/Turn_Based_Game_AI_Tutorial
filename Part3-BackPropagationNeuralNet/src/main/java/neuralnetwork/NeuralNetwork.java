@@ -11,6 +11,7 @@ public class NeuralNetwork {
     private List<Double> inputToHiddenLayerWeights;
     private List<Double> hiddenToOutputLayerWeights;
     private final int hiddenLayerNeuronCount;
+    private final int inputCount = 9;
     private Random random = new Random();
 
 
@@ -23,10 +24,7 @@ public class NeuralNetwork {
     }
 
     public void init(){
-        //input layer
-        for (int i = 0; i < 9; i++) {
-            inputLayer.add(new InputLayerNeuron());
-        }
+        inputLayer = new ArrayList<>();
 
         //hidden layer
         for (int i = 0; i < hiddenLayerNeuronCount; i++) {
@@ -37,7 +35,7 @@ public class NeuralNetwork {
         outputNeuron = new OutputLayerNeuron();
 
         //weights between input and hidden layer
-        for (int i = 0; i < inputLayer.size() * hiddenLayer.size(); i++) {
+        for (int i = 0; i < inputCount * hiddenLayer.size(); i++) {
             inputToHiddenLayerWeights.add(getRandomDouble());
         }
 
@@ -45,6 +43,31 @@ public class NeuralNetwork {
         for (int i = 0; i < hiddenLayer.size(); i++) {
             hiddenToOutputLayerWeights.add(getRandomDouble());
         }
+    }
+
+    public double calculate(List<Double> inputValues){
+        for (int i = 0; i < inputCount; i++) {
+            inputLayer.add(new InputLayerNeuron(inputValues.get(i)));
+        }
+        int currentWeightCounter = 0;
+
+        //fireInputs
+        for (int inputCounter = 0; inputCounter < inputCount; inputCounter++) {
+            for (int hiddenLayerCounter = 0; hiddenLayerCounter < hiddenLayerNeuronCount; hiddenLayerCounter++) {
+                HiddenLayerNeuron hiddenLayerNeuron = hiddenLayer.get(hiddenLayerCounter);
+                hiddenLayerNeuron.addValue(inputValues.get(inputCounter)*inputToHiddenLayerWeights.get(currentWeightCounter));
+                currentWeightCounter++;
+            }
+        }
+
+        currentWeightCounter = 0;
+        //fireHiddenLayer
+        for (int hiddenLayerCounter = 0; hiddenLayerCounter < hiddenLayerNeuronCount; hiddenLayerCounter++) {
+            outputNeuron.addValue(hiddenLayer.get(hiddenLayerCounter).fire() * hiddenToOutputLayerWeights.get(currentWeightCounter));
+            currentWeightCounter++;
+        }
+
+        return outputNeuron.fire();
     }
 
     private double getRandomDouble() {
