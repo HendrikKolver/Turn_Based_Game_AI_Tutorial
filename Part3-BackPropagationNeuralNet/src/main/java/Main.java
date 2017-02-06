@@ -1,14 +1,20 @@
 import game.GameEngine;
+import neuralnetwork.NeuralNetwork;
 import player.HumanPlayer;
+import player.NeuralNetPlayer;
 import player.PlayerInterface;
-import player.RandomMovePlayer;
 
 public class Main {
     public static void main(String[] args) {
-        PlayerInterface player1 = new RandomMovePlayer();
+
+
+        NeuralNetwork nn = new NeuralNetwork(4);
+        nn.trainNetwork();
+
+        PlayerInterface player1 = new NeuralNetPlayer();
         PlayerInterface player2 = new HumanPlayer();
         GameEngine gameEngine = new GameEngine(player1, player2);
-        gameEngine.playGame();
+        gameEngine.playGame(nn);
 
         if(gameEngine.getWinningPlayer() == player1){
             System.out.println("Player1 wins");

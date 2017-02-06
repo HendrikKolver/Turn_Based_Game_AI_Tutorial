@@ -2,8 +2,8 @@ package neuralnetwork;
 
 public class HiddenLayerNeuron extends Neuron {
     public double fire(){
-        double returnValue = calculateSigmoid();
+        valueBeforeFire = calculateSigmoid();
         value = 0;
-        return returnValue;
+        return valueBeforeFire;
     }
 }

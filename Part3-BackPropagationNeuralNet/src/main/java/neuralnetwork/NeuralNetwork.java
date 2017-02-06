@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Random;
 
 public class NeuralNetwork {
-    private List<InputLayerNeuron> inputLayer;
     private List<HiddenLayerNeuron> hiddenLayer;
     private OutputLayerNeuron outputNeuron;
     private List<Double> inputToHiddenLayerWeights;
@@ -13,19 +12,20 @@ public class NeuralNetwork {
     private final int hiddenLayerNeuronCount;
     private final int inputCount = 9;
     private Random random = new Random();
+    private final double learningRate = 0.02;
+    private List<Double> inputValues;
 
 
-    public NeuralNetwork(int hiddenLayerNeuronCount){
-        inputLayer = new ArrayList<>();
+    public NeuralNetwork(int hiddenLayerNeuronCount) {
         hiddenLayer = new ArrayList<>();
         inputToHiddenLayerWeights = new ArrayList<>();
         hiddenToOutputLayerWeights = new ArrayList<>();
         this.hiddenLayerNeuronCount = hiddenLayerNeuronCount;
+        init();
+
     }
 
-    public void init(){
-        inputLayer = new ArrayList<>();
-
+    public void init() {
         //hidden layer
         for (int i = 0; i < hiddenLayerNeuronCount; i++) {
             hiddenLayer.add(new HiddenLayerNeuron());
@@ -45,17 +45,15 @@ public class NeuralNetwork {
         }
     }
 
-    public double calculate(List<Double> inputValues){
-        for (int i = 0; i < inputCount; i++) {
-            inputLayer.add(new InputLayerNeuron(inputValues.get(i)));
-        }
+    public double calculate(List<Double> inputValues) {
         int currentWeightCounter = 0;
+        this.inputValues = inputValues;
 
         //fireInputs
         for (int inputCounter = 0; inputCounter < inputCount; inputCounter++) {
             for (int hiddenLayerCounter = 0; hiddenLayerCounter < hiddenLayerNeuronCount; hiddenLayerCounter++) {
                 HiddenLayerNeuron hiddenLayerNeuron = hiddenLayer.get(hiddenLayerCounter);
-                hiddenLayerNeuron.addValue(inputValues.get(inputCounter)*inputToHiddenLayerWeights.get(currentWeightCounter));
+                hiddenLayerNeuron.addValue(inputValues.get(inputCounter) * inputToHiddenLayerWeights.get(currentWeightCounter));
                 currentWeightCounter++;
             }
         }
@@ -68,6 +66,67 @@ public class NeuralNetwork {
         }
 
         return outputNeuron.fire();
+    }
+
+    public void trainNetwork() {
+        TrainingData trainingData = new TrainingData();
+        List<TrainingDataItem> trainingItems = trainingData.getTrainingItems();
+
+
+        for (int i = 0; i < 2000; i++) {
+
+
+            for (TrainingDataItem trainingItem : trainingItems) {
+                List<Double> newHiddenToOutputWeights = new ArrayList<>();
+                List<Double> newInputToHiddenWeights = new ArrayList<>();
+                double output = calculate(trainingItem.getValues());
+                System.out.println(squaredError(output, trainingItem.getExpectedResult()));
+
+                int outputWeightCounter = 0;
+                for (int hiddenLayerCounter = 0; hiddenLayerCounter < hiddenLayerNeuronCount; hiddenLayerCounter++) {
+                    double hiddenOutput = hiddenLayer.get(hiddenLayerCounter).getValueBeforeFire();
+                    double hiddenToOutputWeight = hiddenToOutputLayerWeights.get(outputWeightCounter);
+                    double newWeight = outputToHiddenBackPropogate(trainingItem.getExpectedResult(), output, hiddenOutput, hiddenToOutputWeight);
+                    newHiddenToOutputWeights.add(newWeight);
+                    outputWeightCounter++;
+                }
+
+                int inputWeightCounter = 0;
+                for (int inputCounter = 0; inputCounter < inputCount; inputCounter++) {
+                    for (int hiddenLayerCounter = 0; hiddenLayerCounter < hiddenLayerNeuronCount; hiddenLayerCounter++) {
+                        double difference = differenceBetweenExpectedAndActualResult(trainingItem.getExpectedResult(), output);
+                        double partialDerivativeFinalOutput = partialDerivative(output);
+                        double errorValue = difference * partialDerivativeFinalOutput;
+                        double errorValueTimesWeight = errorValue * hiddenToOutputLayerWeights.get(hiddenLayerCounter);
+                        double partialDerivativeHiddenOutput = partialDerivative(hiddenLayer.get(hiddenLayerCounter).getValueBeforeFire());
+                        double calculatedValueForInput = inputValues.get(inputCounter) * errorValueTimesWeight * partialDerivativeHiddenOutput;
+                        double newWeight = inputToHiddenLayerWeights.get(inputWeightCounter) - (learningRate * calculatedValueForInput);
+                        newInputToHiddenWeights.add(newWeight);
+                        inputWeightCounter++;
+                    }
+                }
+                hiddenToOutputLayerWeights = newHiddenToOutputWeights;
+                inputToHiddenLayerWeights = newInputToHiddenWeights;
+            }
+        }
+    }
+
+    private double squaredError(double output, double expected) {
+        double difference = expected - output;
+        return 0.5 * (Math.pow(difference, 2));
+    }
+
+    private double outputToHiddenBackPropogate(double target, double output, double hiddenOutput, double weight) {
+        double deltaRule = -1 * (target - output) * output * (1 - output) * hiddenOutput;
+        return weight - deltaRule * learningRate;
+    }
+
+    private double differenceBetweenExpectedAndActualResult(double expected, double actual) {
+        return (actual - expected);
+    }
+
+    private double partialDerivative(double output) {
+        return output * (1 - output);
     }
 
     private double getRandomDouble() {

@@ -1,5 +1,8 @@
 package game;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class BoardState {
     private GameStateValue[][] gameBoard;
 
@@ -53,6 +56,22 @@ public class BoardState {
         return  clonedState;
     }
 
+    public List<Double> getNumericBoardValue(GameStateValue player)
+    {
+        List<Double>  boardValue = new ArrayList<>();
+        for (int row = 0; row < 3; row++) {
+            for (int col = 0; col < 3; col++) {
+                if(gameBoard[row][col] == player){
+                    boardValue.add(1.0);
+                }else if(gameBoard[row][col] == GameStateValue.EMPTY){
+                    boardValue.add(0.0);
+                }else{
+                    boardValue.add(2.0);
+                }
+            }
+        }
+        return boardValue;
+    }
     public void printBoardState() {
         for (int row = 0; row < 3; row++) {
             String rowValue = "|";

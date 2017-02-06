@@ -2,6 +2,7 @@ package gametree;
 
 import game.BoardState;
 import game.GameStateValue;
+import neuralnetwork.NeuralNetwork;
 import player.PlayerMove;
 
 import java.util.List;
@@ -14,15 +15,17 @@ public class ABPruningTree {
     private final int MAX_PLY_DEPTH = 50;
     private final int MIN_CAP = -100;
     private final int MAX_CAP = 100;
+    private final NeuralNetwork neuralNetwork;
 
-    public ABPruningTree(GameStateValue player, GameStateValue opponent, BoardState boardState){
+    public ABPruningTree(GameStateValue player, GameStateValue opponent, BoardState boardState, NeuralNetwork nn){
         this.boardState = boardState;
         this.playerState = player;
         this.opponentState = opponent;
+        this.neuralNetwork = nn;
     }
 
     public PlayerMove getOptimalMove(){
-        GameTreeNode rootNode = new GameTreeNode(opponentState, playerState, boardState);
+        GameTreeNode rootNode = new GameTreeNode(opponentState, playerState, boardState, neuralNetwork);
         //We now pass initial values to the build tree function which represent the initial values of alpha and beta
         buildTreeMax(rootNode, 0, MIN_CAP, MAX_CAP);
         List<GameTreeNode> children = rootNode.getChildren();
