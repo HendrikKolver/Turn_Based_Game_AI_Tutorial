@@ -30,6 +30,7 @@ public class GameTreeNode {
 
     //Always evaluate from the max perspective
     public void evalBoardState(){
+        //use the neural network here to calculate how good the current board state is
         List<Double> boardValue = nodeBoardState.getNumericBoardValue(maxState);
         evalScore = neuralNetwork.calculate(boardValue);
     }

@@ -24,8 +24,6 @@ public class BoardState {
         }
     }
 
-
-
     //returns true if move is valid
     public boolean makeMove(GameStateValue move, int positionRow, int positionCol){
         if(isEmpty(positionRow, positionCol)){
