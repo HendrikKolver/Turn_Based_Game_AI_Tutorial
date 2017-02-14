@@ -5,5 +5,5 @@ import game.GameStateValue;
 import neuralnetwork.NeuralNetwork;
 
 public interface PlayerInterface {
-    PlayerMove getMove(BoardState boardState, GameStateValue playerStateValue, GameStateValue opponentStateValue, NeuralNetwork nn);
+    PlayerMove getMove(BoardState boardState, GameStateValue playerStateValue, GameStateValue opponentStateValue);
 }

@@ -11,10 +11,10 @@ public class Main {
         NeuralNetwork nn = new NeuralNetwork(4);
         nn.trainNetwork();
 
-        PlayerInterface player1 = new NeuralNetPlayer();
+        PlayerInterface player1 = new NeuralNetPlayer(nn);
         PlayerInterface player2 = new HumanPlayer();
         GameEngine gameEngine = new GameEngine(player1, player2);
-        gameEngine.playGame(nn);
+        gameEngine.playGame();
 
         if(gameEngine.getWinningPlayer() == player1){
             System.out.println("Player1 wins");

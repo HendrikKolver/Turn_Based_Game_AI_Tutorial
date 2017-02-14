@@ -16,17 +16,17 @@ public class GameEngine {
         this.playerCrosses = playerCrosses;
     }
 
-    public void playGame(NeuralNetwork neuralNetwork){
+    public void playGame(){
         while(!isGameFinished()){
             boolean wasMoveValid = false;
             while(!isGameFinished() && !wasMoveValid){
-                PlayerMove move = playerNaughts.getMove(boardState, GameStateValue.NAUGHT, GameStateValue.CROSS, neuralNetwork);
+                PlayerMove move = playerNaughts.getMove(boardState, GameStateValue.NAUGHT, GameStateValue.CROSS);
                 wasMoveValid = boardState.makeMove(GameStateValue.NAUGHT, move.row, move.col);
             }
 
             wasMoveValid = false;
             while(!isGameFinished() && !wasMoveValid){
-                PlayerMove move = playerCrosses.getMove(boardState, GameStateValue.CROSS, GameStateValue.NAUGHT, neuralNetwork);
+                PlayerMove move = playerCrosses.getMove(boardState, GameStateValue.CROSS, GameStateValue.NAUGHT);
                 wasMoveValid = boardState.makeMove(GameStateValue.CROSS, move.row, move.col);
             }
         }

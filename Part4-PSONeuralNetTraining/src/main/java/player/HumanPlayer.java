@@ -9,7 +9,7 @@ import java.util.Scanner;
 public class HumanPlayer implements PlayerInterface {
 
     @Override
-    public PlayerMove getMove(BoardState boardState, GameStateValue playerStateValue, GameStateValue opponentStateValue, NeuralNetwork nn) {
+    public PlayerMove getMove(BoardState boardState, GameStateValue playerStateValue, GameStateValue opponentStateValue) {
         boardState.printBoardState();
 
         Scanner reader = new Scanner(System.in);  // Reading from System.in
