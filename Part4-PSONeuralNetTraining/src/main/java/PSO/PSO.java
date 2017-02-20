@@ -8,31 +8,43 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PSO {
-    private static final double LEARNING_FACTOR = 2;
-    private NeuralNetPlayer globalBestPlayer;
-    private int playerCount = 10;
+    private static final double LEARNING_FACTOR = 1.4;
+    private int playerCount = 30;
     private int hiddenNeuroncount = 4;
-    private int roundCount = 10;
+    private int roundCount = 150;
 
 
-    public PlayerInterface trainPlayer(){
+    public NeuralNetPlayer trainPlayer(){
         List<NeuralNetPlayer> players = getSeedPlayers();
 
         int roundCounter = 0;
 
         while(roundCounter < roundCount){
+            System.out.println(roundCounter);
+
             Tournament.runTournament(players);
             updatePersonalBests(players);
-            globalBestPlayer = getBestPlayer(players);
-            updateVelocities(players, globalBestPlayer);
+            NeuralNetPlayer player = getBestPlayer(players);
+            updateVelocities(players, player);
             updatePlayerPositions(players);
 
-            //TODO clear the current player scores after every round
-            clearCurrentScores();
+            //Clear all player scores after every round
+            clearCurrentScores(players);
+
+            roundCounter++;
         }
 
-        //TODO play one last round of the game before deciding the winner
+        //Run the tournament one last time to get the best player
+        Tournament.runTournament(players);
+        updatePersonalBests(players);
+
         return getBestPlayer(players);
+    }
+
+    private void clearCurrentScores(List<NeuralNetPlayer> players) {
+        for (NeuralNetPlayer player : players) {
+            player.setCurrentScore(0);
+        }
     }
 
     private void updatePlayerPositions(List<NeuralNetPlayer> players) {
@@ -59,7 +71,8 @@ public class PSO {
             List<Double> velocities = player.getVelocity();
             NeuralNetwork currentSolution = player.getNeuralNetwork();
             NeuralNetwork personalBestSolution = player.getPersonalBestNetwork();
-            NeuralNetwork globalBestSolution = globalBestPlayer.getNeuralNetwork();
+            //Use the personal best neural network of the global best player as this is likely to represent the best solution that has been found so far
+            NeuralNetwork globalBestSolution = globalBestPlayer.getPersonalBestNetwork();
 
             //Calculate velocity for each dimension
             for (int i = 0; i < velocities.size(); i++) {
@@ -86,9 +99,7 @@ public class PSO {
 
     private void updatePersonalBests(List<NeuralNetPlayer> players) {
         for (NeuralNetPlayer player : players) {
-            if (player.getCurrentScore() > player.getPersonalBestScore()){
-                player.updatePersonalBest();
-            }
+            player.updatePersonalBest();
         }
 
     }
@@ -106,15 +117,11 @@ public class PSO {
         NeuralNetPlayer winningPlayer = null;
 
         for (NeuralNetPlayer player : players) {
-            if (player.getPersonalBestScore() > maxScore) {
-                maxScore = player.getPersonalBestScore();
+            if (player.getCurrentScore() > maxScore) {
+                maxScore = player.getCurrentScore();
                 winningPlayer = player;
             }
         }
         return winningPlayer;
-    }
-
-    public NeuralNetPlayer getGlobalBestPlayer() {
-        return globalBestPlayer;
     }
 }

@@ -1,17 +1,16 @@
 import game.GameEngine;
-import neuralnetwork.NeuralNetwork;
 import player.HumanPlayer;
 import player.NeuralNetPlayer;
 import player.PlayerInterface;
+import PSO.PSO;
 
 public class Main {
     public static void main(String[] args) {
 
+        PSO pso = new PSO();
+        NeuralNetPlayer bestPlayer = pso.trainPlayer();
 
-        NeuralNetwork nn = new NeuralNetwork(4);
-        nn.trainNetwork();
-
-        PlayerInterface player1 = new NeuralNetPlayer(nn);
+        PlayerInterface player1 = new NeuralNetPlayer(bestPlayer.getPersonalBestNetwork());
         PlayerInterface player2 = new HumanPlayer();
         GameEngine gameEngine = new GameEngine(player1, player2);
         gameEngine.playGame();
