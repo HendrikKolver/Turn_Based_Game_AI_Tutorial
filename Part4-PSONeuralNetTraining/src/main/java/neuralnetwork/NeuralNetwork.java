@@ -158,16 +158,24 @@ public class NeuralNetwork {
     }
 
     private double getRandomDouble() {
-        return RANDOM.nextDouble();
+        double min = -3;
+        double max = 3;
+        return min + (max - min) * RANDOM.nextDouble();
     }
 
     public NeuralNetwork copy() {
         NeuralNetwork copyNetwork = new NeuralNetwork(hiddenLayerNeuronCount);
 
-        List<Double> copyInputToHiddenLayerWeights = new ArrayList<>(inputToHiddenLayerWeights);
+        List<Double> copyInputToHiddenLayerWeights = new ArrayList<>();
+        for (Double value : inputToHiddenLayerWeights) {
+            copyInputToHiddenLayerWeights.add(new Double(value.doubleValue()));
+        }
         copyNetwork.setInputToHiddenLayerWeights(copyInputToHiddenLayerWeights);
 
-        List<Double> copyHiddenToOutputLayerWeights = new ArrayList<>(hiddenToOutputLayerWeights);
+        List<Double> copyHiddenToOutputLayerWeights = new ArrayList<>();
+        for (Double value : hiddenToOutputLayerWeights) {
+            copyHiddenToOutputLayerWeights.add(new Double(value.doubleValue()));
+        }
         copyNetwork.setHiddenToOutputLayerWeights(copyHiddenToOutputLayerWeights);
 
         return copyNetwork;

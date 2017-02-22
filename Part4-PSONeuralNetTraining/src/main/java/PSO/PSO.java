@@ -2,16 +2,17 @@ package PSO;
 
 import neuralnetwork.NeuralNetwork;
 import player.NeuralNetPlayer;
-import player.PlayerInterface;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class PSO {
     private static final double LEARNING_FACTOR = 1.4;
+    private static final double MAX_WEIGHT = 3;
     private int playerCount = 30;
     private int hiddenNeuroncount = 4;
-    private int roundCount = 150;
+    private int roundCount = 100;
+    private final double MAX_VELOCITY = 1.0;
 
 
     public NeuralNetPlayer trainPlayer(){
@@ -55,11 +56,21 @@ public class PSO {
 
             for (int i = 0; i < currentSolution.getInputToHiddenLayerWeights().size(); i++) {
                 currentSolution.getInputToHiddenLayerWeights().set(i, velocities.get(velocityCount)+ currentSolution.getInputToHiddenLayerWeights().get(i));
+
+                //Stop the solution from leaving the search space
+                if(currentSolution.getInputToHiddenLayerWeights().get(i) > MAX_WEIGHT || currentSolution.getInputToHiddenLayerWeights().get(i) < MAX_WEIGHT*-1){
+                    velocities.set(velocityCount, velocities.get(velocityCount)*-1);
+                }
                 velocityCount++;
             }
 
             for (int i = 0; i < currentSolution.getHiddenToOutputLayerWeights().size(); i++) {
                 currentSolution.getHiddenToOutputLayerWeights().set(i, velocities.get(velocityCount)+ currentSolution.getHiddenToOutputLayerWeights().get(i));
+
+                //Stop the solution from leaving the search space
+                if(currentSolution.getHiddenToOutputLayerWeights().get(i) > MAX_WEIGHT || currentSolution.getHiddenToOutputLayerWeights().get(i) < MAX_WEIGHT*-1){
+                    velocities.set(velocityCount, velocities.get(velocityCount)*-1);
+                }
                 velocityCount++;
             }
         }
@@ -78,10 +89,19 @@ public class PSO {
             for (int i = 0; i < velocities.size(); i++) {
                 double personalComponent = calculateComponent(personalBestSolution, currentSolution, i);
                 double globalComponent = calculateComponent(globalBestSolution, currentSolution, i);
-                velocities.set(i, velocities.get(i)+ personalComponent + globalComponent);
+                double newVelocity = velocities.get(i)+ personalComponent + globalComponent;
+
+                //Capping the velocity in any dimension to a max
+                if(newVelocity> MAX_VELOCITY){
+                    newVelocity = MAX_VELOCITY;
+                }else if( newVelocity < (-1 * MAX_VELOCITY)){
+                    newVelocity = (-1 * MAX_VELOCITY);
+                }
+                velocities.set(i, newVelocity);
             }
         }
     }
+
 
     private double calculateComponent(NeuralNetwork comparingSolution, NeuralNetwork currentSolution, int i) {
         double comparingSolutionWeight;
@@ -112,14 +132,24 @@ public class PSO {
         return seedPlayers;
     }
 
-    private NeuralNetPlayer getBestPlayer(List<NeuralNetPlayer> players){
-        int maxScore = -100;
-        NeuralNetPlayer winningPlayer = null;
+    private NeuralNetPlayer getBestPlayer(List<NeuralNetPlayer> currentTournamentPlayers){
+        //Run a full round of the tournament using each players personal best solution to find the absolute best solution in the pool
+        List<NeuralNetPlayer> bestSolutionPlayers = new ArrayList<>();
+        for (NeuralNetPlayer player : currentTournamentPlayers) {
+            bestSolutionPlayers.add(new NeuralNetPlayer(player.getPersonalBestNetwork()));
+        }
 
-        for (NeuralNetPlayer player : players) {
-            if (player.getCurrentScore() > maxScore) {
-                maxScore = player.getCurrentScore();
-                winningPlayer = player;
+        Tournament.runTournament(bestSolutionPlayers);
+
+        int maxScore = -10000;
+        NeuralNetPlayer winningPlayer = null;
+        int counter = 0;
+
+        for (NeuralNetPlayer bestSolutionPlayer : bestSolutionPlayers) {
+            if (bestSolutionPlayer.getCurrentScore() > maxScore) {
+                maxScore = bestSolutionPlayer.getCurrentScore();
+                winningPlayer = currentTournamentPlayers.get(counter);
+                counter++;
             }
         }
         return winningPlayer;

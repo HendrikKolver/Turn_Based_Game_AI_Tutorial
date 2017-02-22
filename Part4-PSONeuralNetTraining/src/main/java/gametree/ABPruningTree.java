@@ -12,7 +12,7 @@ public class ABPruningTree {
     private final BoardState boardState;
     private final GameStateValue playerState;
     private final GameStateValue opponentState;
-    private final int MAX_PLY_DEPTH = 50;
+    private final int MAX_PLY_DEPTH = 4;
     private final int MIN_CAP = -100;
     private final int MAX_CAP = 100;
     private final NeuralNetwork neuralNetwork;
