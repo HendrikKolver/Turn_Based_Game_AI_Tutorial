@@ -9,19 +9,20 @@ import java.util.List;
 public class PSO {
     private static final double LEARNING_FACTOR = 1.4;
     private static final double MAX_WEIGHT = 1;
-    private int playerCount = 30;
+    private int playerCount = 10;
     private int hiddenNeuroncount = 4;
-    private int roundCount = 100;
+    private int roundCount = 200;
     private final double MAX_VELOCITY = 0.3;
+    private final double VELOCITY_WEIGHT = 0.72;
 
 
     public NeuralNetPlayer trainPlayer(){
         List<NeuralNetPlayer> players = getSeedPlayers();
 
-        int roundCounter = 0;
+        float roundCounter = 0;
 
         while(roundCounter < roundCount){
-            System.out.println(roundCounter);
+            System.out.println("Percentage complete: "+ Math.round(roundCounter/roundCount*100f));
 
             Tournament.runTournament(players);
             updatePersonalBests(players);
@@ -35,7 +36,7 @@ public class PSO {
             roundCounter++;
         }
 
-        //Run the tournament one last time to get the best player
+        //Run the tournament one last time to update the personal bests
         Tournament.runTournament(players);
         updatePersonalBests(players);
 
@@ -95,25 +96,43 @@ public class PSO {
 
             //Calculate velocity for each dimension
             for (int i = 0; i < velocities.size(); i++) {
+                //Calculating the personal and global components of the new velocity
+                //The personal component represents the particles personal best solution
+                //The global component represents the global best solution
                 double personalComponent = calculateComponent(personalBestSolution, currentSolution, i);
                 double globalComponent = calculateComponent(globalBestSolution, currentSolution, i);
-                double newVelocity = (0.72*velocities.get(i))+ personalComponent + globalComponent;
 
-                //Capping the velocity in any dimension to a max
-                if(newVelocity> MAX_VELOCITY){
-                    newVelocity = MAX_VELOCITY;
-                }else if( newVelocity < (-1 * MAX_VELOCITY)){
-                    newVelocity = (-1 * MAX_VELOCITY);
-                }
+                //Using the average velocity of the particle as its current momentum
+                double newVelocity = getNewVelocity((VELOCITY_WEIGHT* getCurrentMomentum(velocities))+ personalComponent + globalComponent);
                 velocities.set(i, newVelocity);
             }
         }
+    }
+
+    private double getNewVelocity(double newVelocity) {
+        //Capping the velocity in any dimension to a max
+        if(newVelocity> MAX_VELOCITY){
+            newVelocity = MAX_VELOCITY;
+        }else if( newVelocity < (-1 * MAX_VELOCITY)){
+            newVelocity = (-1 * MAX_VELOCITY);
+        }
+        return newVelocity;
+    }
+
+    private double getCurrentMomentum(List<Double> velocities) {
+        double total = 0;
+        for (Double velocity: velocities) {
+            total += velocity;
+        }
+        return total/velocities.size();
     }
 
 
     private double calculateComponent(NeuralNetwork comparingSolution, NeuralNetwork currentSolution, int i) {
         double comparingSolutionWeight;
         double currentSolutionWeight;
+
+        //Get the weights we are working with
         if(i < currentSolution.getInputToHiddenLayerWeights().size()){
             comparingSolutionWeight = comparingSolution.getInputToHiddenLayerWeights().get(i);
             currentSolutionWeight = currentSolution.getInputToHiddenLayerWeights().get(i);
@@ -129,7 +148,6 @@ public class PSO {
         for (NeuralNetPlayer player : players) {
             player.updatePersonalBest();
         }
-
     }
 
     private List<NeuralNetPlayer> getSeedPlayers() {
