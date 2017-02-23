@@ -158,8 +158,8 @@ public class NeuralNetwork {
     }
 
     private double getRandomDouble() {
-        double min = -3;
-        double max = 3;
+        double min = -1;
+        double max = 1;
         return min + (max - min) * RANDOM.nextDouble();
     }
 

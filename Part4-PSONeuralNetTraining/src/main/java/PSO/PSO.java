@@ -8,11 +8,11 @@ import java.util.List;
 
 public class PSO {
     private static final double LEARNING_FACTOR = 1.4;
-    private static final double MAX_WEIGHT = 3;
+    private static final double MAX_WEIGHT = 1;
     private int playerCount = 30;
     private int hiddenNeuroncount = 4;
     private int roundCount = 100;
-    private final double MAX_VELOCITY = 1.0;
+    private final double MAX_VELOCITY = 0.3;
 
 
     public NeuralNetPlayer trainPlayer(){
@@ -58,8 +58,12 @@ public class PSO {
                 currentSolution.getInputToHiddenLayerWeights().set(i, velocities.get(velocityCount)+ currentSolution.getInputToHiddenLayerWeights().get(i));
 
                 //Stop the solution from leaving the search space
-                if(currentSolution.getInputToHiddenLayerWeights().get(i) > MAX_WEIGHT || currentSolution.getInputToHiddenLayerWeights().get(i) < MAX_WEIGHT*-1){
-                    velocities.set(velocityCount, velocities.get(velocityCount)*-1);
+                if(currentSolution.getInputToHiddenLayerWeights().get(i) > MAX_WEIGHT){
+                    currentSolution.getInputToHiddenLayerWeights().set(i,MAX_WEIGHT);
+                    velocities.set(velocityCount, 0.0);
+                }else if(currentSolution.getInputToHiddenLayerWeights().get(i) < MAX_WEIGHT*-1){
+                    currentSolution.getInputToHiddenLayerWeights().set(i,MAX_WEIGHT*-1);
+                    velocities.set(velocityCount, 0.0);
                 }
                 velocityCount++;
             }
@@ -68,8 +72,12 @@ public class PSO {
                 currentSolution.getHiddenToOutputLayerWeights().set(i, velocities.get(velocityCount)+ currentSolution.getHiddenToOutputLayerWeights().get(i));
 
                 //Stop the solution from leaving the search space
-                if(currentSolution.getHiddenToOutputLayerWeights().get(i) > MAX_WEIGHT || currentSolution.getHiddenToOutputLayerWeights().get(i) < MAX_WEIGHT*-1){
-                    velocities.set(velocityCount, velocities.get(velocityCount)*-1);
+                if(currentSolution.getHiddenToOutputLayerWeights().get(i) > MAX_WEIGHT){
+                    currentSolution.getHiddenToOutputLayerWeights().set(i,MAX_WEIGHT);
+                    velocities.set(velocityCount, 0.0);
+                }else if (currentSolution.getHiddenToOutputLayerWeights().get(i) < MAX_WEIGHT*-1){
+                    currentSolution.getHiddenToOutputLayerWeights().set(i,MAX_WEIGHT*-1);
+                    velocities.set(velocityCount, 0.0);
                 }
                 velocityCount++;
             }
@@ -89,7 +97,7 @@ public class PSO {
             for (int i = 0; i < velocities.size(); i++) {
                 double personalComponent = calculateComponent(personalBestSolution, currentSolution, i);
                 double globalComponent = calculateComponent(globalBestSolution, currentSolution, i);
-                double newVelocity = velocities.get(i)+ personalComponent + globalComponent;
+                double newVelocity = (0.72*velocities.get(i))+ personalComponent + globalComponent;
 
                 //Capping the velocity in any dimension to a max
                 if(newVelocity> MAX_VELOCITY){
